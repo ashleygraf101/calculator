@@ -1,4 +1,4 @@
-import calculate from "../logic/calculate";
+import calculate from "./calculate";
 import chai from "chai";
 
 // https://github.com/chaijs/chai/issues/469
@@ -31,17 +31,43 @@ function test(buttons, expectation, only = false) {
   });
 }
 
+
 describe.each([1,2,3,4,5,6,7,8,9,0])
-  ('entering the number %i returns the same', (a) => {
-  test([a], 
-    { next: a, 
+  ('entering the number %i returns the same', (number) => {
+  test([number], 
+    { next: number, 
   });
 });
 
-describe.each(["÷","x","-","+"])
-  ('entering the operator %p returns the same', (b) => {
-  test([b], 
-    { operation: b, 
+describe("entering 0 and only 0 any number of times returns 0", function() {
+  test(["0", "0"], {  
+    next: "0"
+  });
+});
+
+describe.each(["÷","x","-","+"])('entering the operator %p returns the same', (operator) => {
+  test([operator], 
+    { operation: operator, 
+  });
+});
+
+describe.each(["%", "+/-", "="])('%p returns null without any numbers', (transformer) => {
+  test([transformer], { 
+  });
+});
+
+describe("entering +/- after a number turns it into -", function() {
+  test(["8", "+/-"], {
+    next: "-8",
+  });
+  test(["8", "-", "8", "+/-", "=", "+/-"], {
+    total: "-16",
+  });
+});
+
+describe("clicking add decimals doesn't add another if already exists", function() {
+  test(["2", ".", ".", "4"], {
+    next: "2.4",
   });
 });
 
@@ -67,14 +93,14 @@ describe("the operator signs also act as '='", function() {
   });
 });
 
-describe(" the operator is cleared when AC is pressed", function() {
+describe("the operator is cleared when AC is pressed", function() {
   test(["1", "+", "2", "AC"], {
   });
   test(["+", "2", "AC"], {
   });
 });
 
-describe(" % should convert number to percentage", function() {
+describe("% should convert number to percentage", function() {
   test(["4", "%"], {
     next: "0.04",
   });
@@ -83,7 +109,7 @@ describe(" % should convert number to percentage", function() {
   });
 });
 
-describe(" x should multiply a percentage", function() {
+describe("x should multiply a percentage", function() {
   test(["4", "%", "x", "2", "="], {
     total: "0.08",
   });
