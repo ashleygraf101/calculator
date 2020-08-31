@@ -182,9 +182,27 @@ describe("when '=' is pressed and there is not enough information to complete an
   });
 });
 
+describe("division works", function() {
+  test(["6", "÷", "6", "="], {
+    total: "1",
+  });
+});
+
 describe("multiplication works", function() {
+  test(["6", "x", "6", "="], {
+    total: "36",
+  });
+});
+
+describe("addition works", function() {
   test(["6", "+", "6", "="], {
     total: "12",
+  });
+});
+
+describe("subtraction works", function() {
+  test(["6", "-", "6", "="], {
+    total: "0",
   });
 });
 
